@@ -1,6 +1,4 @@
 🧙‍♂️ Magic Simulator
-[![Java](https://img.shields.io/badge/Java-17+-007396?style=for-the-badge&logo![License: MIT](https://img.shields.io/badge/License-MIT-yellowTurn-based battle simulator with AI-controlled mages collecting artifacts and using AOE attacks.
-
 ## 📋 Оглавление
 
 - [🎮 Демо](#-демо)

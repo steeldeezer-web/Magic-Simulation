@@ -35,7 +35,7 @@ public class PathFinder {
             }
             for(int[] dir : directions){
                 //Получаем следующую координату
-                Coordinate next = new Coordinate(entity.getCoordinate().getX() + dir[0], entity.getCoordinate().getY() + dir[1]);
+                Coordinate next = new Coordinate(current.getX() + dir[0], current.getY() + dir[1]);
                 //Если координата находится в пределах карты и не находится в списке посещенных и (является свободной или является объектом класса  targetClass или его подкласс
                 if(map.isWithInBounds(next) && !visited.contains(next) && (map.isSpotFree(next) || targetClass.isInstance(map.getEntityAt(next)))){
                     //Добавляем в очередь для посещения

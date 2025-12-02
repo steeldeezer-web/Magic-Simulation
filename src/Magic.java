@@ -1,4 +1,6 @@
+import java.lang.foreign.Arena;
 import java.util.List;
+import java.util.UUID;
 
 class Magic extends Creature{
     private int attackPower;
@@ -11,33 +13,103 @@ class Magic extends Creature{
         this.artefactCount = 0;
         this.isAoeAttack = false;
     }
+    public boolean getIsAoeAttack(){
+        return isAoeAttack;
+    }
+
+    public void setAoeAttack(boolean aoeAttack) {
+        isAoeAttack = aoeAttack;
+    }
+
+    public void setArtefactCount(int artefactCount) {
+        this.artefactCount = artefactCount;
+    }
+
+    public int getArtefactCount() {
+        return artefactCount;
+    }
+
+    @Override
+    public Coordinate getCoordinate() {
+        return super.getCoordinate();
+    }
+
+    @Override
+    public int getHealth() {
+        return super.getHealth();
+    }
+
+    @Override
+    public UUID getID() {
+        return super.getID();
+    }
+
+    public int getAttackPower() {
+        return attackPower;
+    }
 
     @Override
     void makeMove(Simulation sim) {
-        // Ищем ближайшего соперника или артефакт
-        List<Coordinate> pathToPrey = PathFinder.findPathToNearestEntity(coordinate, sim.getWorldMap(), Entity.class);
-        if(pathToPrey != null && pathToPrey.size() > 1){
+        List<Coordinate> pathToPrey = PathFinder.findPathToNearestEntity(coordinate, sim.getMap(), Entity.class);
+        if (pathToPrey != null && pathToPrey.size() > 1) {
             Coordinate nextStep = pathToPrey.get(1);
-            Entity target = sim.getWorldMap().getEntityAt(nextStep);
-            if(target instanceof Magic){
-                //Если в соседней клетке есть Маг атакуем
-                target.reduceHealth(attackPower);
-                if (!target.isAlive()){
-                    sim.removeEntity(target);
-                    sim.getWorldMap().removeEntity(target);
-                } else if (sim.getWorldMap().isSpotFree(nextStep)) {
-                    //Если точка пуста идем туда
-                    sim.moveEntity(this, nextStep);
+            Entity target = sim.getMap().getEntityAt(nextStep);
+            if (target != null) {
+                if (target instanceof Magic) {
+                    target.reduceHealth(attackPower);
+                    if (!target.isAlive()) {
+                        if (target instanceof Creature) {  // проверка перед удалением
+                            sim.removeCreature((Creature) target);
+                        }
+                    }
+                    if (isAoeAttack) {
+                        performAoeAttack(target.coordinate, sim);
+                    }
+                } else if (target instanceof Artefact) {
+                    artefactCount++;
+                    sim.getMap().removeEntity(target);  // Артефакт не Creature
+                    if (artefactCount >= 3) {
+                        isAoeAttack = true;
+                    }
+                    sim.moveCreature(this, nextStep);  // используем moveCreature
+                } else {
+                    target.reduceHealth(attackPower);
+                    if (!target.isAlive()) {
+                        if (target instanceof Creature) {
+                            sim.removeCreature((Creature) target);
+                        }
+                    }
+                    if (isAoeAttack) {
+                        performAoeAttack(target.coordinate, sim);
+                    }
                 }
-            } else if (target instanceof Artefact) {
-                artefactCount++;
-                sim.removeEntity(target);
-                sim.getWorldMap().removeEntity(target);
-                if(artefactCount >= 3){
-                    isAoeAttack = true;
-                }
-
+            } else if (sim.getMap().isSpotFree(nextStep)) {
+                sim.moveCreature(this, nextStep);
             }
         }
     }
+    private void performAoeAttack(Coordinate targetPosition, Simulation sim) {
+        List<Coordinate> neighbors = sim.getMap().getNeighbors(targetPosition);  // sim.getMap()
+        for (Coordinate neighbor : neighbors) {
+            Entity entity = sim.getMap().getEntityAt(neighbor);  // sim.getMap()
+            if (entity != null) {
+                if (entity instanceof Artefact) {
+                    artefactCount++;
+                    sim.getMap().removeEntity(entity);
+                    if (artefactCount >= 3) {
+                        isAoeAttack = true;
+                    }
+                } else if (!(entity instanceof Magic)) {
+                    entity.reduceHealth(attackPower);
+                    if (!entity.isAlive() && entity instanceof Creature) {
+                        sim.removeCreature((Creature) entity);
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
 }

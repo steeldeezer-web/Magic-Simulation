@@ -41,5 +41,22 @@ class WorldMap {
         entity.coordinate = newCoordinate;
         entities.put(entity.getCoordinate(), entity);
     }
+    public List<Coordinate> getNeighbors(Coordinate coord){
+        List<Coordinate> neigbors = new ArrayList<>();
+        int x = coord.getX();
+        int y = coord.getY();
+
+        for(int dx = -1; dx <=1; dx++){
+            for(int dy = -1; dy <=1; dy++){
+                if(dx == 0 && dy == 0) continue; // пропуск базовой клетки с целью
+                int nx  = x + dx;
+                int ny = y + dy;
+                if(isWithInBounds(new Coordinate(nx, ny))){
+                    neigbors.add(new Coordinate(nx, ny));
+                }
+            }
+        }
+        return neigbors;
+    }
 
 }

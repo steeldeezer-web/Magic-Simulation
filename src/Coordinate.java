@@ -33,12 +33,11 @@ class Coordinate {
     Coordinate c = (Coordinate) o;
     return X == c.getX() && Y == c.getY();
     }
-    public int hasCode(){
+    public int hashCode(){
         return Objects.hash(X,Y);
     }
     public String toString() {
-        return "X = " + X + "\n" +  // correct newline escape sequence is \n
-                "Y = " + Y;          // proper concatenation between strings
+        return "(" + X + ", " + Y + ")";
     }
 
 

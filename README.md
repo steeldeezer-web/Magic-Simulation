@@ -1,6 +1,5 @@
-# 🧙‍♂️ Симулятор Битвы Магов
-
-[![Java](https://img.shields.io/badge/Java-17%2B-007396?style=for-the-badge&logohttpsензия: MIT](https://img.shields.io/badge/%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F-MIT-yellow.svg?style=for-the-badgehttpsошаговый симулятор боёв с ИИ-магами, собирающими артефакты и использующими AOE-атаки.**
+🧙‍♂️ Magic Simulator
+[![Java](https://img.shields.io/badge/Java-17+-007396?style=for-the-badge&logo![License: MIT](https://img.shields.io/badge/License-MIT-yellowTurn-based battle simulator with AI-controlled mages collecting artifacts and using AOE attacks.
 
 ## 📋 Оглавление
 
